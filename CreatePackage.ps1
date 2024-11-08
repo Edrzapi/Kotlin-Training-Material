@@ -1,7 +1,7 @@
 # Set the base directory for the Kotlin project
 $baseDir = "C:\Users\edrz\IdeaProjects\KotlinTraining\src"
 
-# Define the packages and their associated class files, skipping 1_datatypes
+# Define the package structure without 1_datatypes, only folders and file names
 $packageStructure = @{
     "2_functions" = @("BasicFunctions.kt", "HigherOrderFunctions.kt", "LambdaExpressions.kt", "InlineFunctions.kt")
     "3_oop" = @("ClassesAndObjects.kt", "Inheritance.kt", "Interfaces.kt", "Polymorphism.kt")
@@ -16,27 +16,28 @@ $packageStructure = @{
     "13_tests" = @("UnitTests.kt", "Mocking.kt", "ParameterizedTests.kt", "TestDrivenDevelopment.kt")
 }
 
-# Loop through each package and file
+# Loop through each package to create folders and files
 foreach ($package in $packageStructure.Keys) {
     $packageDir = Join-Path -Path $baseDir -ChildPath $package
 
-    # Format the package name for Kotlin, with backticks around "number_packagename"
-    $packageName = "`$package" # Add backticks in the output file content
+    # Create the directory if it doesn't exist
+    if (!(Test-Path -Path $packageDir)) {
+        New-Item -ItemType Directory -Path $packageDir
+        Write-Output "Created directory: $packageDir"
+    } else {
+        Write-Output "Directory already exists: $packageDir"
+    }
 
+    # Create each .kt file within the folder
     foreach ($file in $packageStructure[$package]) {
         $filePath = Join-Path -Path $packageDir -ChildPath $file
-        $className = $file -replace '.kt$', '' # Remove the .kt extension to get the class name
 
-        # Define the content with package and class declaration
-        $content = @"
-package ``$package``
-
-class $className {
-}
-"@
-
-        # Write the content to the file, overwriting existing content
-        Set-Content -Path $filePath -Value $content
-        Write-Output "Updated file: $filePath with package `$package and class $className"
+        # Create the file only if it does not already exist
+        if (!(Test-Path -Path $filePath)) {
+            New-Item -ItemType File -Path $filePath -Force
+            Write-Output "Created file: $filePath"
+        } else {
+            Write-Output "File already exists: $filePath"
+        }
     }
 }

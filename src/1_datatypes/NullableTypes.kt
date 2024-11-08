@@ -26,6 +26,10 @@ class NullableTypes {
         // Safe cast example
         val safeNumber: Int? = name as? Int  // Safe casting, returns null if name is not an Int
         println("Safe cast result (name as Int?): $safeNumber")
+        // Force null catching with !!
+        val nullableString: String? = null
+        println(nullableString!!.length)  // Throws NullPointerException
+
     }
 
     // Use let function for null checks
@@ -39,6 +43,8 @@ class NullableTypes {
     fun safeCollectionExample(): List<String> {
         return listOfNotNull("Alice", null, "Bob")  // Returns ["Alice", "Bob"], excluding nulls
     }
+
+
 
     // Greeting function with Elvis operator for default value
     fun greet(name: String?) {
